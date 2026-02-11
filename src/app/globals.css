@@ -73,7 +73,27 @@
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  /* --- 5. ANIMATIONS --- */
+    @keyframes lego-drift {
+    0% { 
+      transform: translate(20px, 20px); 
+      opacity: 0; 
+    }
+    10% { 
+      opacity: var(--lego-opacity); 
+    }
+    90% { 
+      opacity: var(--lego-opacity); 
+    }
+    100% { 
+      transform: translate(-20px, -20px); 
+      opacity: 0; 
+    }
+
+    .animate-lego-drift {
+      animation: lego-drift 8s linear infinite;
+    }
+  }
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-brick-float: brick-float 6s ease-in-out infinite;
@@ -112,11 +132,16 @@
 
     --radius: 0.5rem;
 
-    --brick-red: 4 65% 48%;
-    --brick-teal: 174 45% 38%;
-    --brick-amber: 38 70% 55%;
-    --brick-blue: 215 55% 50%;
-    --brick-green: 150 40% 45%;
+    --lego-opacity: 0.45;
+
+    --number-display: 222, 40%, 12%;
+    --number-opacity: 0.20;
+
+    --brick-red: 4 95% 55%;
+    --brick-teal: 174 75% 30%;
+    --brick-amber: 38 85% 35%;
+    --brick-blue: 215 75% 40%;
+    --brick-green: 150 70% 30%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -135,7 +160,18 @@
     --card: 222 35% 10%;
     --card-foreground: 210 20% 92%;
     --primary: 4 70% 55%;
-    /* ... Tambahkan variabel dark mode lainnya di sini jika diperlukan */
+    --accent: 174 75% 55%;
+
+    --lego-opacity: 0.45;
+
+    --number-display: 210, 20%, 72%;
+    --number-opacity: 0.8;
+
+    --brick-red: 4 90% 65%;
+    --brick-teal: 174 80% 60%;
+    --brick-amber: 38 95% 65%;
+    --brick-blue: 215 85% 70%;
+    --brick-green: 150 80% 60%;
   }
 
   * {
@@ -161,13 +197,11 @@
   body {
     @apply bg-background text-foreground font-body antialiased;
     
-    /* Cara penulisan transisi yang benar agar tidak error parsing */
     transition-property: background-color, color, border-color !important;
     transition-duration: 0.5s !important;
     transition-timing-function: ease-in-out !important;
   }
 
-  /* Agar elemen lain juga ikut fade tanpa menyebabkan error parsing */
   * {
     transition-property: background-color, border-color, color;
     transition-duration: 0.5s;

@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion"; // Pastikan framer-moti
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
+  { href: "/experience", label: "Experience" },
   { href: "/contact", label: "Contact" },
 ];
 

@@ -16,7 +16,7 @@ interface BrickProps {
 }
 
 const Brick = memo(({ color, delay, isActive, intensity }: BrickProps) => {
-  const lift = isActive ? intensity * 8 : 0;
+  const lift = isActive ? intensity * 12 : 0;
   const glow = isActive ? intensity * 0.6 : 0;
 
   return (
@@ -29,25 +29,36 @@ const Brick = memo(({ color, delay, isActive, intensity }: BrickProps) => {
     >
       {/* Brick body */}
       <div
-        className="w-full aspect-square rounded-sm relative"
+        className="w-full aspect-square rounded-[3px] relative transition-all duration-500"
         style={{
           backgroundColor: `hsl(${color})`,
-          opacity: 0.12 + glow * 0.4,
+          opacity: `calc(var(--lego-opacity) + ${glow * 0.3})`,
+          border: '1px solid hsla(0, 0%, 0%, 0.08)',
           boxShadow: isActive
-            ? `0 ${4 + lift}px ${12 + lift * 2}px -2px hsl(${color} / ${0.3 + glow * 0.3}), inset 0 1px 1px hsl(0 0% 100% / 0.1)`
-            : `0 2px 4px -1px hsl(${color} / 0.1), inset 0 1px 1px hsl(0 0% 100% / 0.05)`,
-          transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+            ? `0 ${10 + lift}px 20px -5px hsl(${color} / 0.4)`
+            : `0 2px 4px rgba(0,0,0,0.08)`,
         }}
       >
-        {/* Stud on top */}
-        <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] rounded-full"
-          style={{
-            backgroundColor: `hsl(${color})`,
-            opacity: 0.25 + glow * 0.5,
-            boxShadow: `inset 0 -1px 2px hsl(0 0% 0% / 0.2), 0 1px 2px hsl(0 0% 100% / 0.1)`,
-          }}
-        />
+        {/* Container Grid untuk 4 Stud */}
+        <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 p-[20%] gap-[22%]">
+          {[...Array(4)].map((_, idx) => (
+            <div
+              key={idx}
+              className="w-full h-full rounded-full relative"
+              style={{
+                // Warna dasar sama dengan kotak
+                backgroundColor: `hsl(${color})`,
+                // Highlight di atas (seolah terkena lampu) dan shadow di bawah
+                backgroundImage: `linear-gradient(135deg, rgba(255,255,255,25) 0%, rgba(0,0,0,15) 100%)`,
+                boxShadow: `
+                  0 1px 2px rgba(0,0,0,0.3), 
+                  inset 0 1px 1px rgba(255,255,255,0.3),
+                  inset 0 -1px 1px rgba(0,0,0,0.2)
+                `,
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
