@@ -102,7 +102,7 @@
 
 @layer base {
   :root {
-    --background: 40 30% 97%; 
+    --background: 40 20% 96%; 
     --foreground: 222 40% 12%;
 
     --primary: 4 65% 48%;
@@ -132,12 +132,12 @@
 
     --radius: 0.5rem;
 
-    --lego-opacity: 0.45;
+    --lego-opacity: 0.75;
 
     --number-display: 222, 40%, 12%;
     --number-opacity: 0.20;
 
-    --brick-red: 4 95% 55%;
+    --brick-red: 4 75% 40%;
     --brick-teal: 174 75% 30%;
     --brick-amber: 38 85% 35%;
     --brick-blue: 215 75% 40%;
