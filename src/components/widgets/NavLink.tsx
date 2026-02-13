@@ -11,14 +11,13 @@ interface NavLinkProps {
   className?: string;
   activeClassName?: string;
   exact?: boolean;
-  [key: string]: any; // Untuk props tambahan lainnya
+  [key: string]: any;
 }
 
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
   ({ href, children, className, activeClassName, exact = false, ...props }, ref) => {
     const pathname = usePathname();
     
-    // Logika menentukan apakah link sedang aktif
     const isActive = exact 
       ? pathname === href 
       : pathname.startsWith(href) && (href === '/' ? pathname === '/' : true);

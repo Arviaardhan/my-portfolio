@@ -11,7 +11,6 @@ const BRICK_COLORS = [
   "150 70% 35%",  // Green
 ];
 
-// Komponen Brick Lego 3D yang sudah kita pertajam
 const Brick = memo(({ color, intensity }: { color: string; intensity: number }) => {
   return (
     <div className="w-full h-full p-[1px]">
@@ -56,20 +55,17 @@ export default function LegoGrid() {
   const brickSize = 60;
 
   useEffect(() => {
-  // Gunakan path langsung tanpa kata 'public'
-  const audio = new Audio("/sound/lego-click-sound.mp3");
-  audio.volume = 0.8;
-  audioRef.current = audio;
-  
-  // Memastikan audio terisi dengan benar
-  console.log("Audio initialized from: ", audio.src);
-}, []);
+    const audio = new Audio("/sound/lego-click-sound.mp3");
+    audio.volume = 0.8;
+    audioRef.current = audio;
+  }, []);
 
   useEffect(() => {
     const update = () => {
+      // Kita tambah ekstra rows (+2) agar saat animasi loop tidak terlihat kosong di bawah
       setGrid({
-        cols: Math.ceil(window.innerWidth / brickSize),
-        rows: Math.ceil(window.innerHeight / brickSize),
+        cols: Math.ceil(window.innerWidth / brickSize) + 1,
+        rows: Math.ceil(window.innerHeight / brickSize) + 2, 
       });
     };
     update();
@@ -84,7 +80,6 @@ export default function LegoGrid() {
     const y = e.clientY - rect.top;
     setMousePos({ x, y });
 
-    // Cek ID kotak untuk trigger suara
     const col = Math.floor(x / brickSize);
     const row = Math.floor(y / brickSize);
     const id = row * grid.cols + col;
@@ -93,7 +88,7 @@ export default function LegoGrid() {
       setActiveBrick(id);
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {}); // Catch jika browser blokir autoplay
+        audioRef.current.play().catch(() => {});
       }
     }
   };
@@ -105,11 +100,21 @@ export default function LegoGrid() {
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setMousePos({ x: -1000, y: -1000 })}
     >
-      <div 
-        className="grid w-full h-full"
+      {/* ANIMASI SCROLLING KOTAK: Menggerakkan seluruh grid ke atas */}
+      <motion.div 
+        className="grid w-full"
+        animate={{ 
+          y: [0, -brickSize] // Bergeser sejauh ukuran satu kotak
+        }}
+        transition={{ 
+          duration: 3, // Semakin kecil angka, semakin cepat jalannya
+          ease: "linear", 
+          repeat: Infinity 
+        }}
         style={{ 
           gridTemplateColumns: `repeat(${grid.cols}, ${brickSize}px)`,
-          gridTemplateRows: `repeat(${grid.rows}, ${brickSize}px)` 
+          // Pastikan tinggi grid melebihi layar agar tidak ada gap putih saat ditarik ke atas
+          height: `${grid.rows * brickSize}px` 
         }}
       >
         {Array.from({ length: grid.rows * grid.cols }).map((_, i) => {
@@ -119,14 +124,15 @@ export default function LegoGrid() {
           const bx = col * brickSize + brickSize / 2;
           const by = row * brickSize + brickSize / 2;
           
+          // LEGO tetap muncul berdasarkan posisi mouse yang real-time
           const dist = Math.sqrt((bx - mousePos.x) ** 2 + (by - mousePos.y) ** 2);
-          const isVisible = dist < 120; // Lego muncul dalam radius 120px
+          const isVisible = dist < 120;
           const intensity = Math.max(0, 1 - dist / 120);
 
           return (
             <div 
               key={i} 
-              className="relative border-[0.5px] border-foreground/[0.03] flex items-center justify-center"
+              className="relative border-[1px] border-foreground/[0.09] flex items-center justify-center"
               style={{ width: brickSize, height: brickSize }}
             >
               <AnimatePresence>
@@ -134,7 +140,7 @@ export default function LegoGrid() {
                   <motion.div
                     initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
                     animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                    exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.5 } }} // Efek jejak menghilang pelan
+                    exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.5 } }} 
                     className="absolute inset-0 z-10"
                   >
                     <Brick 
@@ -147,7 +153,7 @@ export default function LegoGrid() {
             </div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }
