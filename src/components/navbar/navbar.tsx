@@ -32,7 +32,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* DESKTOP NAVBAR (Tetap di atas) */}
       <nav
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500 hidden md:block",
@@ -82,9 +81,17 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* MOBILE BOTTOM NAVBAR (Hanya muncul di mobile) */}
+      <div className="fixed top-5 right-6 z-[60] md:hidden">
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="p-3 rounded-2xl bg-background/80 backdrop-blur-xl border border-border/50 shadow-lg text-foreground"
+        >
+          {theme === "dark" ? <Sun size={20} className="text-brick-amber" /> : <Moon size={20} className="text-accent" />}
+        </button>
+      </div>
+
       <nav className="fixed bottom-6 left-0 right-0 z-50 flex justify-center md:hidden px-6">
-        <div className="bg-background/80 backdrop-blur-2xl border border-border/50 shadow-2xl rounded-2xl flex items-center justify-around w-full max-w-md p-2 relative">
+        <div className="bg-background/80 backdrop-blur-2xl border border-border/50 shadow-2xl rounded-3xl flex items-center justify-around w-full max-w-md p-2 relative">
           {NAV_LINKS.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
             return (
@@ -96,30 +103,18 @@ export default function Navbar() {
                   isActive ? "text-primary scale-110" : "text-muted-foreground"
                 )}
               >
-                <Icon size={20} />
-                <span className="text-[10px] font-medium font-display uppercase tracking-wider">
-                  {label}
-                </span>
-                
+                <Icon size={22} />
+                <span className="text-[10px] font-medium font-display uppercase tracking-wider">{label}</span>
                 {isActive && (
                   <motion.div
                     layoutId="bottom-nav-indicator"
-                    className="absolute -top-2 w-8 h-1 bg-primary rounded-full"
+                    className="absolute -bottom-1 w-6 h-1 bg-primary rounded-full"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
               </Link>
             );
           })}
-
-          {/* Theme Toggle Mobile */}
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="flex flex-col items-center justify-center flex-1 py-2 text-muted-foreground"
-          >
-            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
-            <span className="text-[10px] font-medium uppercase tracking-wider">Mode</span>
-          </button>
         </div>
       </nav>
     </>
